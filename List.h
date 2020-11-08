@@ -166,15 +166,22 @@ void Lista<T>::insertar(const T &e, Nodo *p)
         throw Exception("Memoria no disponible en la insercion de datos");
     }
     if (p == nullptr)
-    { //esto inserta en cualquier lugar
-        aux->setNext(anchor);
+    { //inserta al principio
+        if (tavacio())
+        {
+            aux->setNext(aux);
+        }
+        else
+        {
+            aux->setNext(anchor);
+            getlastp()->setNext(aux);
+        }
         anchor = aux;
     }
     else
     {
         aux->setNext(p->getNext());
         p->setNext(aux);
-        
     }
 }
 
@@ -187,7 +194,15 @@ void Lista<T>::borrar(Nodo *p)
     }
     if (p == anchor)
     { //eliminara al priomero
-        anchor = anchor->getnext();
+        if (p->getNext() == p)
+        {
+            anchor = nullptr;
+        }
+        else
+        {
+            getlastp()->setNext(anchor->getNext());
+            anchor = anchor->getnext();
+        }
     }
     else
     {
@@ -195,16 +210,16 @@ void Lista<T>::borrar(Nodo *p)
     }
     delete p;
 }
-/*
-template <class T>
+
+template <class T> //serviria pero el ancla ya hace este pedo
 typename Lista<T>::Nodo *Lista<T>::getfirst()
 {
     if (tavacio())
     {
-        throw ListException("getElementAt() - Lista vacia");
+        throw Exception("getElementAt() - Lista vacia");
     }
-    return 0;
-}*/
+    return anchor;
+}
 
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::getlastp()
@@ -215,7 +230,7 @@ typename Lista<T>::Nodo *Lista<T>::getlastp()
     }
 
     Nodo *aux(anchor);
-    while (aux->getNext() != nullptr)
+    while (aux->getNext() != anchor)
     {
         aux = aux->getNext();
     }
@@ -225,24 +240,28 @@ typename Lista<T>::Nodo *Lista<T>::getlastp()
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::getprev(Nodo *p)
 {
-    if (p == anchor)
+    if (p == anchor || tavacio())
     {
         return nullptr;
     }
 
     Nodo *aux(anchor);
 
-    while (aux != nullptr && aux->getNext() != p)
+    do
     {
+        if (aux->getNext() == p)
+        {
+            return aux;
+        }
         aux = aux->getNext();
-    }
-    return aux;
+    } while (aux != anchor);
+    return nullptr;
 }
 
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::getnext(Nodo *p)
 {
-    if (!valida(p))
+    if (!valida(p) || p->getNext() == anchor)
     {
         return nullptr;
     }
@@ -263,39 +282,53 @@ T Lista<T>::recupera(const Nodo *p)
 template <class T>
 void Lista<T>::borrador4k()
 {
+    if (tavacio())
+    {
+        return;
+    }
+    Nodo *mark(anchor);
     Nodo *aux;
 
-    while (anchor != nullptr)
+    do
     {
         aux = anchor;
         anchor = anchor->getNext();
-        delete aux;
-    }
+    } while (anchor != mark);
+    anchor = nullptr;
 }
 
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::busquedalineal(const T &e)
 {
-
-    Nodo *aux(anchor);
-
-    while (aux != nullptr && aux->getData() != e)
+    if (!tavacio())
     {
-        aux = aux->getNext();
+        Nodo *aux(anchor);
+        do
+        {
+            if (aux->getData() == e)
+            {
+                return aux;
+            }
+            aux = aux->getNext();
+
+        } while (aux != anchor);
     }
-    return aux;
+
+    return nullptr;
 }
 
 template <class T>
 std::string Lista<T>::tostring()
 {
-    Nodo *aux(anchor);
     string resultado;
-
-    while (aux != nullptr)
+    if (!tavacio())
     {
-        resultado += aux->getData().tostr() + " \n";
-        aux = aux->getNext();
+        Nodo *aux(anchor);
+        do
+        {
+            resultado += aux->getData().tostr() + "\n";
+            aux = aux->getNext();
+        } while (aux != anchor);
     }
 
     return resultado;
@@ -304,17 +337,22 @@ std::string Lista<T>::tostring()
 template <class T>
 void Lista<T>::copyAll(const Lista<T> &l)
 {
+    if (l.tavacia())
+    {
+        return;
+    }
+
     Nodo *aux(l.anchor);
     Nodo *last(nullptr);
     Nodo *newNodo;
+    //la validacion que dijo el profe 
+    if(newNodo==nullptr){
+        return;
+    }
 
-    while (aux != nullptr)
+    do
     {
         newNodo = new Nodo(aux->getData());
-        if (newNodo == nullptr)
-        {
-            throw Exception("No jalo");
-        }
         if (last == nullptr)
         {
             anchor = newNodo;
@@ -325,8 +363,8 @@ void Lista<T>::copyAll(const Lista<T> &l)
         }
         last = newNodo;
         aux = aux->getNext();
-        
-    }
+
+    } while (aux != l.anchor);
 }
 
 template <class T>

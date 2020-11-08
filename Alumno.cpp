@@ -65,3 +65,6 @@ int Alumno::comparanombre(const Alumno &c1, const Alumno &c2)
 bool Alumno::operator != (const Alumno& c) const {
     return nombre != c.nombre;
     }
+bool Alumno::operator == (const Alumno& c) const {
+    return nombre == c.nombre;
+    }
