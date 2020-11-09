@@ -64,8 +64,8 @@ public:
     ~Lista();
 
     //comprobadores globales
-    bool tavacio();
-    bool talleno();
+    bool tavacio()const;
+    bool talleno()const;
     //fake setters
     //Nombre    //pos           //interprete        //autor
     void insertar(const T &, Nodo *); //nombre de la canciono, la posicion la usaremos como rank, interprete, Artista, Auttor del artista
@@ -130,25 +130,30 @@ template <class T>
 Lista<T>::Lista(const Lista<T> &l) : anchor(nullptr) { copyAll(l); }
 
 //implementacion
+
+
 template <class T>
-bool Lista<T>::isValid(Nodo *p) const
+bool Lista<T>::tavacio()const
 {
-    Nodo *aux(anchor);
-    while (aux != nullptr)
-    {
-        if (aux == p)
-        {
-            return true;
-        }
-        aux = aux->getNext();
-    }
-    return false;
+    return anchor == nullptr;
 }
 
 template <class T>
-bool Lista<T>::tavacio()
-{
-    return anchor == nullptr;
+bool Lista<T>::isValid(Nodo *p) const{   
+    if (!tavacio()){
+        Nodo *aux(anchor);
+        do
+        {
+            if (aux == p)
+            {
+                return true;
+            }
+            aux = aux->getNext();
+        }while (aux != anchor);
+        }
+    
+    
+    return false;
 }
 
 template <class T>
@@ -366,7 +371,11 @@ void Lista<T>::copyAll(const Lista<T> &l)
 
     } while (aux != l.anchor);
 }
-
+template<class T>
+Lista<T>& Lista<T>::operator=(const Lista<T>&l){
+    borrador4k();
+    copyAll();
+}
 template <class T>
 Lista<T>::~Lista()
 {
