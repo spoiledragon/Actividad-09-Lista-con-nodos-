@@ -193,7 +193,7 @@ void Lista<T>::insertar(const T &e, Nodo *p)
 template <class T>
 void Lista<T>::borrar(Nodo *p)
 {
-    if (!valida(p))
+    if (!isValid(p))
     {
         throw Exception("Posicion invalida en borrar");
     }
@@ -206,7 +206,7 @@ void Lista<T>::borrar(Nodo *p)
         else
         {
             getlastp()->setNext(anchor->getNext());
-            anchor = anchor->getnext();
+            anchor = anchor->getNext();
         }
     }
     else
@@ -277,10 +277,7 @@ typename Lista<T>::Nodo *Lista<T>::getnext(Nodo *p)
 template <class T>
 T Lista<T>::recupera(const Nodo *p)
 {
-    if (!valida(p))
-    {
-        throw Exception("Posicion invalida en recupera");
-    }
+   
     return p->getData();
 }
 

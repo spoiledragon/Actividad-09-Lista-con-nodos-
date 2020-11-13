@@ -2,17 +2,17 @@
 #define MENUSITO_H_INCLUDED
 #include "List.h"
 #include <iostream>
-#include "Alumno.h"
+#include "Cancion.h"
 #include "Date.h"
 
 class Menu{
 private: 
-Lista<Alumno>myList;
-Alumno myStudent;
+Lista<Cancion>myList;
+Cancion mySong;
 Date myIngreso;
 Date myBirdthday;
 
-Lista<Alumno>::Position pos;
+Lista<Cancion>::Position pos;
 
 
 std::string mystring;
@@ -24,6 +24,10 @@ public:
     void ingreso();
     void mostrar();
     void limpia();
+    void buscar();
+    void borrar();
+    void recuperar();
+    void insertar_inicio();
     void menuact5();
     
     

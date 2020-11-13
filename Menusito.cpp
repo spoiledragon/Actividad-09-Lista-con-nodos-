@@ -6,23 +6,40 @@ int pos, opc, ran;
 void Menu::ingreso()
 {
 
-    cout << "Nombre:" << endl;
-    fflush(stdin);
-    getline(cin, mystring); //el cin se va al pilin por el espacio
-    myStudent.setnombre(mystring);
-
-    cout << "Codigo:" << endl;
-    fflush(stdin);
-    getline(cin, mystring);
-    myStudent.setcodigo(mystring);
-    cout << "Interprete:" << endl;
-    fflush(stdin);
+    cin >> mySong;
 
     //se puede encerrar en un trycatch
     //primero inserto el estudihambre y luego su posicion
-    myList.insertar(myStudent, myList.getlastp());
+    myList.insertar(mySong, myList.getlastp());
 }
 
+void Menu::recuperar()
+{
+    cout << "Ingrese el nombre  de la cancion" << endl;
+    fflush(stdin);
+    cin >> mystring;
+    mySong.setnombre(mystring);
+    cout << myList.recupera(myList.busquedalineal(mySong)) << endl;
+    system("PAUSE");
+}
+
+void Menu::buscar()
+{
+    cout << "Ingrese el nombre la cancion" << endl;
+    fflush(stdin);
+    cin >> mystring;
+    mySong.setnombre(mystring);
+    cout << myList.busquedalineal(mySong);
+    system("PAUSE");
+}
+void Menu::borrar()
+{
+    cout << "Ingrese el nombre  de la cancion" << endl;
+    fflush(stdin);
+    cin >> mystring;
+    mySong.setnombre(mystring);
+    myList.borrar(myList.busquedalineal(mySong));
+}
 void Menu::mostrar()
 {
     cout << myList.tostring();
@@ -38,16 +55,17 @@ void Menu::limpia()
 void Menu::menuact5()
 {
     int menu;
-    Alumno temp;
+    Cancion temp;
     do
     {
         Menu::limpia();
         cout << "Bienvenido al menu de la actividad 5" << endl;
-        cout << "Solo podras ingresar datos asi que x" << endl;
         cout << "1.- Ingresar nueva cancion" << endl;
         cout << "2.- Mostrar todas las canciones" << endl;
-        cout << "3.- Busqueda Lineal" << endl;
+        cout << "3.- Busqueda Lineal (regresa direccion de memoria)" << endl;
         cout << "4.- Borrar" << endl;
+        cout << "5.- Recuperar" << endl;
+        cout << "6.- Insertar al inicio" << endl;
         cout << "0.- salir" << endl;
         cin >> menu;
 
@@ -64,21 +82,22 @@ void Menu::menuact5()
         default:
 
         case 3:
-            cout << "Ingrese el nombre a buscar del Artista o de la cancion" << endl;
-            
-            fflush(stdin);
-            cin>>mystring;
-            temp.setnombre(mystring);
-            cout << myList.busquedalineal(temp);
-            system("PAUSE");
+            Menu::buscar();
             break;
 
         case 4:
-            cout << "Ingrese el nombre a buscar del Artista o de la cancion" << endl;
-            fflush(stdin);
-            temp.getnombre();
-            //cout << myList.borrar()
-        break;
+            Menu::borrar();
+            break;
+
+        case 5:
+            Menu::recuperar();
+            break;
+
+        case 6:
+
+            cin >> mySong;
+            myList.insertar(mySong, myList.getfirst());
+            break;
 
         case 0:
             return;
