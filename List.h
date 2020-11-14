@@ -83,7 +83,8 @@ public:
 
     void borrador4k(); //podemos borrar aca bien piola o regresar a la primera posicion depende del caso
 
-    Nodo *busquedalineal(const T &);
+    Nodo *busquedalinealNombre(const T &);
+    Nodo *busquedalinealArtista(const T &);
 
     Lista<T> &operator=(const Lista<T> &); //operador de asignacion}
 };
@@ -300,7 +301,27 @@ void Lista<T>::borrador4k()
 }
 
 template <class T>
-typename Lista<T>::Nodo *Lista<T>::busquedalineal(const T &e)
+typename Lista<T>::Nodo *Lista<T>::busquedalinealNombre(const T &e)
+{
+    if (!tavacio())
+    {
+        Nodo *aux(anchor);
+        do
+        {
+            if (aux->getData() == e)
+            {
+                return aux;
+            }
+            aux = aux->getNext();
+
+        } while (aux != anchor);
+    }
+
+    return nullptr;
+}
+
+template <class T>
+typename Lista<T>::Nodo *Lista<T>::busquedalinealArtista(const T &e)
 {
     if (!tavacio())
     {

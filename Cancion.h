@@ -36,8 +36,10 @@ public:
 
     static int comparanombre(const Cancion &c1, const Cancion &c2);
     static int comparartista(const Cancion &c1, const Cancion &c2);
+    
 
-    Cancion &operator=(const Cancion c1)
+        Cancion &
+        operator=(const Cancion c1)
     {
         nombre = c1.nombre;
         artista = c1.artista;
