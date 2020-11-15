@@ -3,14 +3,12 @@
 #include "List.h"
 #include <iostream>
 #include "Cancion.h"
-#include "Date.h"
 
 class Menu{
 private: 
 Lista<Cancion>myList;
 Cancion mySong;
-Date myIngreso;
-Date myBirdthday;
+
 
 Lista<Cancion>::Position pos;
 

@@ -16,17 +16,25 @@ private:
     private:
         T data;
         Nodo *next;
+        Nodo *prev;
+        void copyAll{const List<T> & };
+        bool isValidPos(Nodo *) const;
 
     public:
         //construcores de nodo
         Nodo();
         Nodo(const T &);
+
         //metodos de nodo
-        T getData() const;
         Nodo *getNext() const;
+        Nodo *getPrev() const;
+
         //setters de nodo
         void setData(const T &);
         void setNext(Nodo *);
+        void setPrev(Nodo *);
+
+        T getData() const;
     };
     Nodo *anchor; //apunta al primer nodo siempre
     bool isValid(Nodo *) const;
@@ -64,12 +72,11 @@ public:
     ~Lista();
 
     //comprobadores globales
-    bool tavacio()const;
-    bool talleno()const;
-    //fake setters
-    //Nombre    //pos           //interprete        //autor
-    void insertar(const T &, Nodo *); //nombre de la canciono, la posicion la usaremos como rank, interprete, Artista, Auttor del artista
-    void borrar(Nodo *);              //pos borra
+    bool tavacio() const;
+    bool talleno() const;
+
+    void insertar(const T &, Nodo *);
+    void borrar(Nodo *); //pos borra
 
     //void insertasiguiente(const T &);
     //fake getters
@@ -92,10 +99,10 @@ public:
 using namespace std;
 //implementacion de Nodos AQUI°°--------------------------------------------------------------------------------------------------------------------------------
 template <class T>
-Lista<T>::Nodo::Nodo() : next(nullptr) {}
+Lista<T>::Nodo::Nodo() : next(nullptr), prev(nullptr) {}
 
 template <class T>
-Lista<T>::Nodo::Nodo(const T &e) : data(e), next(nullptr) {}
+Lista<T>::Nodo::Nodo(const T &e) : data(e), next(nullptr), prev(nullptr) {}
 
 template <class T>
 T Lista<T>::Nodo::getData() const
@@ -107,6 +114,11 @@ template <class T>
 typename Lista<T>::Nodo *Lista<T>::Nodo::getNext() const
 {
     return next;
+}
+template <class T>
+typename Lista<T>::Nodo *Lista<T>::Nodo::getPrev() const
+{
+    return prev;
 }
 
 template <class T>
@@ -120,6 +132,11 @@ void Lista<T>::Nodo::setNext(Nodo *n)
 {
     next = n;
 }
+template <class T>
+void Lista<T>::Nodo::setPrev(Nodo *p)
+{
+    prev = p;
+}
 
 //implementacion de Lista
 //AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-----------------------------------------------------------------------------------------------------------------
@@ -132,16 +149,17 @@ Lista<T>::Lista(const Lista<T> &l) : anchor(nullptr) { copyAll(l); }
 
 //implementacion
 
-
 template <class T>
-bool Lista<T>::tavacio()const
+bool Lista<T>::tavacio() const
 {
     return anchor == nullptr;
 }
 
 template <class T>
-bool Lista<T>::isValid(Nodo *p) const{   
-    if (!tavacio()){
+bool Lista<T>::isValid(Nodo *p) const
+{
+    if (!tavacio())
+    {
         Nodo *aux(anchor);
         do
         {
@@ -150,10 +168,9 @@ bool Lista<T>::isValid(Nodo *p) const{
                 return true;
             }
             aux = aux->getNext();
-        }while (aux != anchor);
-        }
-    
-    
+        } while (aux != anchor);
+    }
+
     return false;
 }
 
@@ -172,21 +189,29 @@ void Lista<T>::insertar(const T &e, Nodo *p)
         throw Exception("Memoria no disponible en la insercion de datos");
     }
     if (p == nullptr)
-    { //inserta al principio
-        if (tavacio())
+    { //inserta al principio de los tiempos
+        if (anchor == nullptr)
         {
+            aux->setPrev(aux);
             aux->setNext(aux);
         }
         else
         {
+            //si yua hay mas nodos entonces
+            aux->setPrev(anchor->getPrev());
             aux->setNext(anchor);
-            getlastp()->setNext(aux);
+
+            anchor->getPrev()->setNext(aux);
+            anchor->setPrev(aux);
         }
         anchor = aux;
     }
-    else
+    else //insercion en cualquier lugar de la memori
     {
+        aux->setPrev(p);
         aux->setNext(p->getNext());
+
+        p->getNext()->setPrev(aux);
         p->setNext(aux);
     }
 }
@@ -198,21 +223,19 @@ void Lista<T>::borrar(Nodo *p)
     {
         throw Exception("Posicion invalida en borrar");
     }
+    p->getPrev()->setNext(p->getNext());
+    p->getNext()->setPrev(p->getPrev());
+
     if (p == anchor)
-    { //eliminara al priomero
+    { //eliminacion al firsto
         if (p->getNext() == p)
-        {
+        { //solo hay uno en la lista
             anchor = nullptr;
         }
         else
         {
-            getlastp()->setNext(anchor->getNext());
             anchor = anchor->getNext();
         }
-    }
-    else
-    {
-        getprev(p)->setNext(p->getNext());
     }
     delete p;
 }
@@ -223,6 +246,7 @@ typename Lista<T>::Nodo *Lista<T>::getfirst()
     if (tavacio())
     {
         throw Exception("getElementAt() - Lista vacia");
+        return nullptr;
     }
     return anchor;
 }
@@ -232,42 +256,28 @@ typename Lista<T>::Nodo *Lista<T>::getlastp()
 {
     if (tavacio())
     {
+        throw Exception("getElementAt() - Lista vacia");
         return nullptr;
     }
 
-    Nodo *aux(anchor);
-    while (aux->getNext() != anchor)
-    {
-        aux = aux->getNext();
-    }
-    return aux;
+    return anchor->getPrev();
 }
 
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::getprev(Nodo *p)
 {
-    if (p == anchor || tavacio())
+    if (p == anchor || !isValid(p))
     {
         return nullptr;
     }
 
-    Nodo *aux(anchor);
-
-    do
-    {
-        if (aux->getNext() == p)
-        {
-            return aux;
-        }
-        aux = aux->getNext();
-    } while (aux != anchor);
-    return nullptr;
+    return p->getPrev();
 }
 
 template <class T>
 typename Lista<T>::Nodo *Lista<T>::getnext(Nodo *p)
 {
-    if (!valida(p) || p->getNext() == anchor)
+    if (!valida(p) || anchor->getPrev() == p)
     {
         return nullptr;
     }
@@ -278,7 +288,10 @@ typename Lista<T>::Nodo *Lista<T>::getnext(Nodo *p)
 template <class T>
 T Lista<T>::recupera(const Nodo *p)
 {
-   
+    if (!isValid(p))
+    {
+        throw Exception("getElementAt() - Posicion invalida en recuperar ");
+    }
     return p->getData();
 }
 
@@ -296,6 +309,7 @@ void Lista<T>::borrador4k()
     {
         aux = anchor;
         anchor = anchor->getNext();
+        delete aux;
     } while (anchor != mark);
     anchor = nullptr;
 }
@@ -344,8 +358,10 @@ template <class T>
 std::string Lista<T>::tostring()
 {
     string resultado;
+    resultado="No hay elementos";
     if (!tavacio())
     {
+        resultado="";
         Nodo *aux(anchor);
         do
         {
@@ -368,8 +384,9 @@ void Lista<T>::copyAll(const Lista<T> &l)
     Nodo *aux(l.anchor);
     Nodo *last(nullptr);
     Nodo *newNodo;
-    //la validacion que dijo el profe 
-    if(newNodo==nullptr){
+    //la validacion que dijo el profe
+    if (newNodo == nullptr)
+    {
         return;
     }
 
@@ -389,8 +406,9 @@ void Lista<T>::copyAll(const Lista<T> &l)
 
     } while (aux != l.anchor);
 }
-template<class T>
-Lista<T>& Lista<T>::operator=(const Lista<T>&l){
+template <class T>
+Lista<T> &Lista<T>::operator=(const Lista<T> &l)
+{
     borrador4k();
     copyAll();
 }

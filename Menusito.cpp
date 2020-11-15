@@ -80,8 +80,6 @@ void Menu::buscar()
                 Menu::mostrar();
                 break;
 
-            default:
-
             case 3:
                 Menu::buscar();
                 break;
@@ -103,6 +101,10 @@ void Menu::buscar()
             case 0:
                 return;
                 break;
+            
+            default:
+            cout<<"eso no existe oiga"<<endl;
+            break;
             }
 
         } while (true);
