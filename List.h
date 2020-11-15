@@ -17,8 +17,6 @@ private:
         T data;
         Nodo *next;
         Nodo *prev;
-        void copyAll{const List<T> & };
-        bool isValidPos(Nodo *) const;
 
     public:
         //construcores de nodo
@@ -37,8 +35,7 @@ private:
         T getData() const;
     };
     Nodo *anchor; //apunta al primer nodo siempre
-    bool isValid(Nodo *) const;
-    void copyAll(const Lista<T> &);
+    void copyAll(const Lista<T> &) const;
 
 public:
     typedef Nodo *Position;
@@ -74,17 +71,18 @@ public:
     //comprobadores globales
     bool tavacio() const;
     bool talleno() const;
+    bool isValid(Nodo *p)const;
 
     void insertar(const T &, Nodo *);
     void borrar(Nodo *); //pos borra
 
     //void insertasiguiente(const T &);
     //fake getters
-    Nodo *getfirst();         //la primera
-    Nodo *getlastp();         //la ultima
-    Nodo *getprev(Nodo *);    //anterior
-    Nodo *getnext(Nodo *);    //la que sigue
-    T recupera(const Nodo *); //retriueve = recupera
+    Nodo *getfirst();               //la primera
+    Nodo *getlastp();               //la ultima
+    Nodo *getprev(Nodo *);          //anterior
+    Nodo *getnext(Nodo *);          //la que sigue
+    T recupera(const Nodo *) const; //retriueve = recupera
 
     std::string tostring();
 
@@ -156,14 +154,14 @@ bool Lista<T>::tavacio() const
 }
 
 template <class T>
-bool Lista<T>::isValid(Nodo *p) const
+bool Lista<T>::isValid(Nodo *n) const
 {
     if (!tavacio())
     {
         Nodo *aux(anchor);
         do
         {
-            if (aux == p)
+            if (aux == n)
             {
                 return true;
             }
@@ -256,7 +254,6 @@ typename Lista<T>::Nodo *Lista<T>::getlastp()
 {
     if (tavacio())
     {
-        throw Exception("getElementAt() - Lista vacia");
         return nullptr;
     }
 
@@ -286,12 +283,8 @@ typename Lista<T>::Nodo *Lista<T>::getnext(Nodo *p)
 }
 
 template <class T>
-T Lista<T>::recupera(const Nodo *p)
+T Lista<T>::recupera(const Nodo *p) const
 {
-    if (!isValid(p))
-    {
-        throw Exception("getElementAt() - Posicion invalida en recuperar ");
-    }
     return p->getData();
 }
 
@@ -358,10 +351,10 @@ template <class T>
 std::string Lista<T>::tostring()
 {
     string resultado;
-    resultado="No hay elementos";
+    resultado = "No hay elementos";
     if (!tavacio())
     {
-        resultado="";
+        resultado = "";
         Nodo *aux(anchor);
         do
         {
@@ -374,7 +367,7 @@ std::string Lista<T>::tostring()
 }
 
 template <class T>
-void Lista<T>::copyAll(const Lista<T> &l)
+void Lista<T>::copyAll(const Lista<T> &l) const
 {
     if (l.tavacia())
     {
@@ -411,6 +404,7 @@ Lista<T> &Lista<T>::operator=(const Lista<T> &l)
 {
     borrador4k();
     copyAll();
+    return *this;
 }
 template <class T>
 Lista<T>::~Lista()

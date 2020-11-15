@@ -10,9 +10,6 @@ Lista<Cancion>myList;
 Cancion mySong;
 
 
-Lista<Cancion>::Position pos;
-
-
 std::string mystring;
 
 
@@ -25,7 +22,6 @@ public:
     void buscar();
     void borrar();
     void recuperar();
-    std::string capturab() const;
     void insertar_inicio();
     void menuact5();
     

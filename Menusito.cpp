@@ -9,6 +9,7 @@ void Menu::ingreso()
     //se puede encerrar en un trycatch
     //primero inserto el estudihambre y luego su posicion
     myList.insertar(mySong, myList.getlastp());
+    fflush(stdin);
 }
 
 void Menu::recuperar()
@@ -17,7 +18,7 @@ void Menu::recuperar()
     fflush(stdin);
     getline(cin, mystring);
     mySong.setnombre(mystring);
-    cout << myList.recupera(myList.busquedalinealNombre(mySong)) << endl;
+    cout << myList.recupera(myList.busquedalinealNombre(mySong))<< endl;
     system("PAUSE");
 }
 
